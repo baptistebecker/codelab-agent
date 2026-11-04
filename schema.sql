@@ -1,0 +1,2 @@
+-- Schéma de la base : Réservation de salles.
+-- Écrivez ici vos CREATE TABLE IF NOT EXISTS.
