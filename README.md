@@ -102,6 +102,19 @@ python app.py
 
 Ouvrez ensuite <http://127.0.0.1:5000>. Dans le terminal, Ctrl+C arrête l’application.
 
+## Bien travailler avec l'agent
+
+- Une petite demande à la fois.
+- Donnez les règles et un exemple à vérifier.
+- Demandez des tests, puis lancez `pytest`.
+- Essayez l'application et lisez le diff.
+- Faites un commit à chaque étape qui marche.
+- Si ça part de travers, revenez au dernier commit avec `git restore .` et reformulez.
+
+Trop vague : « Fais-moi l'application. »
+
+Précis : « Ajoute la réservation d'une salle. Refuse les chevauchements : finir à 12 h et commencer à 12 h est autorisé. Ajoute les tests et lance pytest. »
+
 ## Travailler à deux
 
 Une seule personne utilise l'agent à la fois. Pour chaque fonctionnalité :
