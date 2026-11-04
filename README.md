@@ -170,11 +170,12 @@ Avant de fusionner, vérifiez trois points :
 
 ## Ajouter les skills
 
-À faire à l'annonce en séance, depuis `main` à jour. Trois skills sont prêts dans `skills-a-essayer/`.
+À faire à l'annonce en séance, depuis `main` à jour, à la racine de votre dépôt.
 
 ```bash
+git clone https://github.com/umons-ig/codelab-skills ../codelab-skills
 mkdir -p .agents/skills
-cp -R skills-a-essayer/revue-de-code skills-a-essayer/ajouter-fonctionnalite .agents/skills/
+cp -R ../codelab-skills/revue-de-code ../codelab-skills/ajouter-fonctionnalite .agents/skills/
 git add -A
 git commit -m "ajoute les skills"
 ```
