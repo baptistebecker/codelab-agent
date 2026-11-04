@@ -9,11 +9,11 @@
 Python, Flask, FastAPI ou Streamlit (à préciser), SQLite, pytest.
 
 ## Commandes
-- Lancer l'application : `python app.py` (à adapter si FastAPI ou Streamlit)
-- Lancer les tests : `pytest`
+- Lancer l'application : `python app.py` dans `code-flask`, `streamlit run app.py` dans `code-streamlit`
+- Lancer les tests : `pytest` dans le dossier de code
 
 ## Base de données
-Tables dans `schema.sql`, exemples dans `seed.sql`, base dans `data.db` (créée au lancement). Supprimer `data.db` après un changement de schéma.
+Tables et exemples dans `base.sql`. `data.db` se crée au premier lancement. Supprimer `data.db` après un changement de `base.sql`.
 
 ## Structure du code
 <!-- Où va quoi : par exemple où se trouvent les règles métier, les routes, l'accès à la base. -->

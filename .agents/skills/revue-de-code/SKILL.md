@@ -11,7 +11,7 @@ Tu relis du code pour un binôme d'étudiants. C'est le binôme qui décide de c
 
 1. Lis `AGENTS.md` et `CAHIER_DES_CHARGES.pdf` si tu peux le lire.
 2. Exécute `git diff main...HEAD` pour voir les changements.
-3. Lance `pytest` et note le résultat.
+3. Lance `pytest` dans le dossier de code et note le résultat.
 4. Relis le diff avec les points ci-dessous.
 
 ## Points à vérifier
