@@ -8,15 +8,12 @@ Séance 2 · En binôme · Avec un agent de code, OpenCode ou Mistral Vibe.
 
 ## Votre parcours
 
-L'application de base va vite avec un agent. Le vrai travail, c'est la suite. Quand un palier est fini, passez au suivant sans attendre.
+- [ ] **1. Coder et relire** : l'application en petites demandes, avec une pull request et une relecture par fonctionnalité.
+- [ ] **2. Ajouter les skills** : à l'annonce en séance, continuez avec les skills et regardez ce qui change.
+- [ ] **3. Faire évoluer** : une demande de changement sera annoncée en séance.
+- [ ] **4. Bonus** : écrire votre propre skill, ou ajouter ce qui est dans « Si vous avez fini ».
 
-- [ ] **1. Faire marcher** : l'application de base, en petites demandes.
-- [ ] **2. Relire** : une pull request et une revue de code par fonctionnalité.
-- [ ] **3. Comparer** : la même demande, sans puis avec un skill.
-- [ ] **4. Faire évoluer** : une demande de changement sera annoncée en séance.
-- [ ] **5. Bonus** : écrire votre propre skill, ou ajouter ce qui est dans « Si vous avez fini ».
-
-Tout le monde doit au moins atteindre le palier 2.
+`AGENTS.md` est déjà rempli. Lisez-le et ajoutez ce que vous voulez dans « À vous d'ajouter ».
 
 ## Le contexte
 
@@ -157,10 +154,10 @@ git push -u origin nom-de-la-fonctionnalite
 
 Ouvrez ensuite une pull request sur GitHub.
 
-## Revue de code
+## Relire chaque fonctionnalité
 
-1. Le pilote fait un commit, ouvre une nouvelle session de l'agent et lance la revue. Avec Mistral Vibe : `/revue-de-code`. Avec OpenCode : `Utilise le skill revue-de-code`. Le skill est dans `.agents/skills/revue-de-code/SKILL.md` : lisez-le. Mistral Vibe ne lit ce dossier que si vous lui faites confiance au lancement. Si le skill n'est pas trouvé, demandez : `Relis git diff main...HEAD sans rien modifier`.
-2. Le relecteur classe chaque remarque : juste, fausse ou inutile, en vérifiant dans le code et dans l'application.
+1. Le pilote fait un commit, ouvre une nouvelle session de l'agent et demande : `Relis git diff main...HEAD sans rien modifier`.
+2. Le relecteur lance `pytest`, ouvre la page, puis classe chaque remarque : juste, fausse ou inutile.
 3. Le pilote fait corriger les remarques justes, puis fait `git add -A`, `git commit` et `git push`.
 4. Le relecteur laisse un commentaire sur la pull request : ce qui est retenu ou rejeté, et pourquoi.
 5. Le relecteur fusionne la pull request sur GitHub, puis vous inversez les rôles.
@@ -171,39 +168,27 @@ Avant de fusionner, vérifiez trois points :
 - Un cas limite a-t-il été essayé : champ vide, doublon, conflit ?
 - Le relecteur sait-il expliquer ce code ?
 
-## Comparer sans et avec un skill
+## Ajouter les skills
 
-Deux skills sont prêts dans `skills-a-essayer/` : `ajouter-fonctionnalite` et `ecrire-les-tests`. Choisissez-en un et une petite fonctionnalité, par exemple l'annulation d'une réservation.
-
-**Essai A, sans le skill.** Faites votre demande à l'agent, puis gardez le résultat :
+À faire à l'annonce en séance, depuis `main` à jour. Trois skills sont prêts dans `skills-a-essayer/`.
 
 ```bash
-git switch main
-git switch -c essai-a
+mkdir -p .agents/skills
+cp -R skills-a-essayer/revue-de-code skills-a-essayer/ajouter-fonctionnalite .agents/skills/
 git add -A
-git commit -m "essai sans skill"
+git commit -m "ajoute les skills"
 ```
 
-**Essai B, avec le skill.** Ajoutez le skill à `main` :
+Sous Windows (PowerShell), utilisez `New-Item -ItemType Directory -Force .agents/skills`, puis `Copy-Item -Recurse` pour chaque skill.
 
-```bash
-git switch main
-cp -R skills-a-essayer/ajouter-fonctionnalite .agents/skills/
-git add -A
-git commit -m "ajoute un skill"
-git switch -c essai-b
-```
+Ouvrez une nouvelle session de l'agent et continuez sur la fonctionnalité suivante :
 
-Sous Windows (PowerShell), remplacez `cp -R` par `Copy-Item -Recurse`. Dans une nouvelle session de l'agent, faites la même demande en ajoutant `Utilise le skill ajouter-fonctionnalite`, puis faites un commit.
+- Pour coder, avec Mistral Vibe : `/ajouter-fonctionnalite`. Avec OpenCode : `Utilise le skill ajouter-fonctionnalite`.
+- Pour relire, avec Mistral Vibe : `/revue-de-code`. Avec OpenCode : `Utilise le skill revue-de-code`.
 
-**Comparez :**
+Mistral Vibe ne lit ces skills que si vous faites confiance au dossier au lancement.
 
-```bash
-git diff --stat main...essai-a
-git diff --stat main...essai-b
-```
-
-Regardez la taille du changement, les fichiers ajoutés, les tests et ce que l'agent annonce. Un seul essai ne prouve rien, car l'agent ne répond pas pareil d'une fois à l'autre. Gardez la meilleure version et passez-la en revue.
+Comparez avec vos premières fonctionnalités : la taille du changement, les fichiers ajoutés, les tests, ce que l'agent annonce et la qualité de la revue. `git diff --stat main...HEAD` donne la taille. Un seul essai ne prouve rien, car l'agent ne répond pas pareil d'une fois à l'autre.
 
 ## Lancer l'agent
 
@@ -224,4 +209,4 @@ uv tool install mistral-vibe
 Dans OpenCode, choisissez un modèle gratuit avec `/models`, puis tapez `free`.
 Mistral Vibe demande de se connecter avec un compte Mistral au premier lancement.
 
-**Avant de lancer l'agent, complétez `AGENTS.md`.**
+Avant de lancer l'agent, lisez `AGENTS.md`.
