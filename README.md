@@ -137,7 +137,7 @@ Ouvrez ensuite une pull request sur GitHub.
 
 ## Revue de code
 
-1. Le pilote ouvre une nouvelle session de l'agent et demande : `Relis git diff main...HEAD sans rien modifier`.
+1. Le pilote ouvre une nouvelle session de l'agent et demande : `Utilise le skill revue-de-code`. Le skill est dans `.agents/skills/revue-de-code/SKILL.md` : lisez-le. Mistral Vibe ne lit ce dossier que si vous lui faites confiance au lancement. Si le skill n'est pas trouvé, demandez : `Relis git diff main...HEAD sans rien modifier`.
 2. Le relecteur classe chaque remarque : juste, fausse ou inutile, en vérifiant dans le code et dans l'application.
 3. Le pilote fait corriger les remarques justes, puis fait `git add -A`, `git commit` et `git push`.
 4. Le relecteur laisse un commentaire sur la pull request : ce qui est retenu ou rejeté, et pourquoi.
