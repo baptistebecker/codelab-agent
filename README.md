@@ -51,7 +51,7 @@ Chercher une salle libre selon le créneau et la capacité, afficher le taux d�
 
 ## Ce qui est libre
 
-Le framework (Flask, FastAPI ou Streamlit), l’organisation du code, le schéma de la base et l’interface. Python, SQLite et pytest sont imposés.
+Le framework (Flask, FastAPI ou Streamlit), l’organisation du code et l’interface. La base SQLite est fournie avec des exemples, et vous pouvez la modifier. Python, SQLite et pytest sont imposés.
 
 ## À la fin de la séance
 
@@ -102,6 +102,31 @@ python app.py
 ```
 
 Ouvrez ensuite <http://127.0.0.1:5000>. Dans le terminal, Ctrl+C arrête l’application.
+
+## La base de données
+
+La base est fournie : tables dans `schema.sql`, exemples dans `seed.sql`. Elle est créée dans `data.db` au premier lancement de l'application. Deux salles et une réservation de S1 le lundi 9 novembre 2026, de 10 h à 12 h. Les tests utilisent une base vide.
+
+Vous pouvez modifier le schéma. Après un changement, ou pour repartir de zéro, supprimez `data.db`.
+
+Trois commandes pour commencer :
+
+```python
+from db import get_connection, init_db
+
+init_db()
+with get_connection() as conn:
+    # Lire
+    lignes = conn.execute("SELECT nom, capacite FROM salles WHERE capacite >= ?", (10,)).fetchall()
+    print([dict(ligne) for ligne in lignes])
+
+    # Ajouter : toujours des ? pour les valeurs
+    conn.execute("INSERT INTO salles (nom, capacite, projecteur) VALUES (?, ?, ?)", ("S3", 12, 1))
+
+    # Joindre : les réservations avec le nom de la salle
+    lignes = conn.execute("SELECT s.nom, r.date, r.debut, r.fin FROM reservations r JOIN salles s ON r.salle_id = s.id").fetchall()
+    print([dict(ligne) for ligne in lignes])
+```
 
 ## Flask, FastAPI ou Streamlit
 
