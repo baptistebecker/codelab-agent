@@ -6,10 +6,10 @@
 <!-- En une ou deux phrases : ce que fait l'application et pour qui. -->
 
 ## Technologies
-Python, Flask ou Streamlit (à préciser), SQLite, pytest.
+Python, Flask, FastAPI ou Streamlit (à préciser), SQLite, pytest.
 
 ## Commandes
-- Lancer l'application : `python app.py` (à adapter si Streamlit)
+- Lancer l'application : `python app.py` (à adapter si FastAPI ou Streamlit)
 - Lancer les tests : `pytest`
 
 ## Structure du code

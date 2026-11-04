@@ -51,10 +51,11 @@ Chercher une salle libre selon le créneau et la capacité, afficher le taux d�
 
 ## Ce qui est libre
 
-L’organisation du code, le schéma de la base et l’interface. Python, Flask ou Streamlit, SQLite et pytest sont imposés.
+Le framework (Flask, FastAPI ou Streamlit), l’organisation du code, le schéma de la base et l’interface. Python, SQLite et pytest sont imposés.
 
 ## À la fin de la séance
 
+- Le but : une application qui fonctionne, avec les fonctionnalités demandées.
 - Poussez votre travail sur GitHub avant les questions.
 - Trois questions individuelles, sur papier et machines fermées. Chacun doit comprendre tout le code.
 
@@ -102,13 +103,41 @@ python app.py
 
 Ouvrez ensuite <http://127.0.0.1:5000>. Dans le terminal, Ctrl+C arrête l’application.
 
-## Flask ou Streamlit
+## Flask, FastAPI ou Streamlit
 
-Le code de démarrage utilise Flask. Choisissez ce que vous préférez.
+Le code de démarrage utilise Flask. Prenez ce que vous voulez.
 
 **Flask** : rien de plus à installer. [Démarrage rapide](https://flask.palletsprojects.com/en/stable/quickstart/).
 
-**Streamlit** : plus rapide pour une interface simple. [Premiers pas](https://docs.streamlit.io/get-started) · [Documentation](https://docs.streamlit.io).
+**FastAPI** : [premiers pas](https://fastapi.tiangolo.com/tutorial/first-steps/).
+
+```bash
+pip install "fastapi[standard]"
+```
+
+Remplacez le contenu de `app.py` par :
+
+```python
+from fastapi import FastAPI
+
+from db import get_connection, init_db
+
+init_db()
+app = FastAPI()
+
+
+@app.get("/")
+def accueil():
+    return {"message": "Mon application"}
+```
+
+Puis lancez :
+
+```bash
+fastapi dev app.py
+```
+
+**Streamlit** : le plus simple pour une interface. [Premiers pas](https://docs.streamlit.io/get-started) · [Documentation](https://docs.streamlit.io).
 
 ```bash
 pip install streamlit
@@ -131,7 +160,7 @@ Puis lancez :
 streamlit run app.py
 ```
 
-Avec Streamlit, ajoutez `streamlit` à `requirements.txt`, supprimez `templates/` et `tests/test_demarrage.py`, qui testent la page Flask, et testez vos règles dans vos propres fichiers de `tests/`.
+Si vous quittez Flask, ajoutez votre framework à `requirements.txt`, supprimez `tests/test_demarrage.py`, qui teste la page Flask, ainsi que `templates/` si vous ne l’utilisez plus, et testez vos règles dans vos propres fichiers de `tests/`.
 
 SQLite : [documentation du module `sqlite3`](https://docs.python.org/3/library/sqlite3.html).
 
