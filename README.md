@@ -6,6 +6,18 @@ Séance 2 · En binôme · Avec un agent de code, OpenCode ou Mistral Vibe.
 
 [Démarrer](#démarrer) · [Cahier des charges en PDF](CAHIER_DES_CHARGES.pdf)
 
+## Votre parcours
+
+L'application de base va vite avec un agent. Le vrai travail, c'est la suite. Quand un palier est fini, passez au suivant sans attendre.
+
+- [ ] **1. Faire marcher** : l'application de base, en petites demandes.
+- [ ] **2. Relire** : une pull request et une revue de code par fonctionnalité.
+- [ ] **3. Comparer** : la même demande, sans puis avec un skill.
+- [ ] **4. Faire évoluer** : une demande de changement sera annoncée en séance.
+- [ ] **5. Bonus** : écrire votre propre skill, ou ajouter ce qui est dans « Si vous avez fini ».
+
+Tout le monde doit au moins atteindre le palier 2.
+
 ## Le contexte
 
 Dans un bâtiment universitaire, les salles se réservent par mail auprès du secrétariat, qui tient un tableur. Les demandes se croisent, les doubles réservations sont fréquentes et certaines salles sont réservées pour des groupes trop grands. Le secrétariat veut que chacun puisse réserver lui-même, avec des règles appliquées automatiquement.
@@ -158,6 +170,40 @@ Avant de fusionner, vérifiez trois points :
 - Est-ce bien ce qui était demandé, sans rien en plus ?
 - Un cas limite a-t-il été essayé : champ vide, doublon, conflit ?
 - Le relecteur sait-il expliquer ce code ?
+
+## Comparer sans et avec un skill
+
+Deux skills sont prêts dans `skills-a-essayer/` : `ajouter-fonctionnalite` et `ecrire-les-tests`. Choisissez-en un et une petite fonctionnalité, par exemple l'annulation d'une réservation.
+
+**Essai A, sans le skill.** Faites votre demande à l'agent, puis gardez le résultat :
+
+```bash
+git switch main
+git switch -c essai-a
+git add -A
+git commit -m "essai sans skill"
+```
+
+**Essai B, avec le skill.** Ajoutez le skill à `main` :
+
+```bash
+git switch main
+cp -R skills-a-essayer/ajouter-fonctionnalite .agents/skills/
+git add -A
+git commit -m "ajoute un skill"
+git switch -c essai-b
+```
+
+Sous Windows (PowerShell), remplacez `cp -R` par `Copy-Item -Recurse`. Dans une nouvelle session de l'agent, faites la même demande en ajoutant `Utilise le skill ajouter-fonctionnalite`, puis faites un commit.
+
+**Comparez :**
+
+```bash
+git diff --stat main...essai-a
+git diff --stat main...essai-b
+```
+
+Regardez la taille du changement, les fichiers ajoutés, les tests et ce que l'agent annonce. Un seul essai ne prouve rien, car l'agent ne répond pas pareil d'une fois à l'autre. Gardez la meilleure version et passez-la en revue.
 
 ## Lancer l'agent
 
