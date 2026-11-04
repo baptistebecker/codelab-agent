@@ -102,6 +102,39 @@ python app.py
 
 Ouvrez ensuite <http://127.0.0.1:5000>. Dans le terminal, Ctrl+C arrête l’application.
 
+## Flask ou Streamlit
+
+Le code de démarrage utilise Flask. Choisissez ce que vous préférez.
+
+**Flask** : rien de plus à installer. [Démarrage rapide](https://flask.palletsprojects.com/en/stable/quickstart/).
+
+**Streamlit** : plus rapide pour une interface simple. [Premiers pas](https://docs.streamlit.io/get-started) · [Documentation](https://docs.streamlit.io).
+
+```bash
+pip install streamlit
+```
+
+Remplacez le contenu de `app.py` par :
+
+```python
+import streamlit as st
+
+from db import get_connection, init_db
+
+init_db()
+st.title("Mon application")
+```
+
+Puis lancez :
+
+```bash
+streamlit run app.py
+```
+
+Avec Streamlit, ajoutez `streamlit` à `requirements.txt`, supprimez `templates/` et `tests/test_demarrage.py`, qui testent la page Flask, et testez vos règles dans vos propres fichiers de `tests/`.
+
+SQLite : [documentation du module `sqlite3`](https://docs.python.org/3/library/sqlite3.html).
+
 ## Bien travailler avec l'agent
 
 - Une petite demande à la fois.
