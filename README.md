@@ -134,6 +134,59 @@ Le code de démarrage utilise Flask. Prenez ce que vous voulez.
 
 **Flask** : rien de plus à installer. [Démarrage rapide](https://flask.palletsprojects.com/en/stable/quickstart/).
 
+Exemple pour démarrer, qui lit et ajoute dans la base. Remplacez le contenu de `app.py` :
+
+```python
+from flask import Flask, redirect, render_template, request
+
+from db import DEFAULT_DB, get_connection, init_db
+
+
+def create_app(db_path=DEFAULT_DB):
+    app = Flask(__name__)
+    init_db(db_path)
+
+    @app.get("/")
+    def index():
+        with get_connection(db_path) as conn:
+            lignes = conn.execute("SELECT nom FROM salles").fetchall()
+        return render_template("index.html", lignes=lignes)
+
+    @app.post("/ajouter")
+    def ajouter():
+        with get_connection(db_path) as conn:
+            conn.execute(
+                "INSERT INTO salles (nom, capacite) VALUES (?, 10)",
+                (request.form["nom"],),
+            )
+        return redirect("/")
+
+    return app
+
+
+if __name__ == "__main__":
+    create_app().run(debug=True)
+```
+
+Et celui de `templates/index.html` :
+
+```html
+<!doctype html>
+<html lang="fr">
+<head><meta charset="utf-8"><title>Salles</title></head>
+<body>
+  <h1>Salles</h1>
+  <form method="post" action="/ajouter">
+    <input name="nom" placeholder="Nouvelle salle" required>
+    <button>Ajouter</button>
+  </form>
+  <ul>
+    {% for ligne in lignes %}<li>{{ ligne["nom"] }}</li>{% endfor %}
+  </ul>
+</body>
+</html>
+```
+
 **FastAPI** : [premiers pas](https://fastapi.tiangolo.com/tutorial/first-steps/).
 
 ```bash
@@ -168,7 +221,7 @@ fastapi dev app.py
 pip install streamlit
 ```
 
-Remplacez le contenu de `app.py` par :
+Exemple pour démarrer, qui lit et ajoute dans la base. Remplacez le contenu de `app.py` par :
 
 ```python
 import streamlit as st
@@ -176,7 +229,18 @@ import streamlit as st
 from db import get_connection, init_db
 
 init_db()
-st.title("Mon application")
+st.title("Salles")
+
+nom = st.text_input("Nouvelle salle")
+if st.button("Ajouter") and nom:
+    with get_connection() as conn:
+        conn.execute(
+            "INSERT INTO salles (nom, capacite) VALUES (?, 10)", (nom,)
+        )
+
+with get_connection() as conn:
+    lignes = conn.execute("SELECT nom FROM salles").fetchall()
+st.table([dict(ligne) for ligne in lignes])
 ```
 
 Puis lancez :
