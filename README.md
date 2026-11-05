@@ -92,18 +92,20 @@ Gardez un dossier et supprimez l'autre. Chacun contient un `app.py` qui lit la b
 
 ## Installer et lancer
 
-macOS ou Linux, dans votre dossier :
+macOS ou Linux, depuis la racine du dépôt :
 
 ```bash
+cd code-flask  # ou cd code-streamlit
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 pytest
 ```
 
-Windows (PowerShell), dans votre dossier :
+Windows (PowerShell), depuis la racine du dépôt :
 
 ```powershell
+cd code-flask  # ou cd code-streamlit
 py -m venv .venv
 Set-ExecutionPolicy -Scope Process RemoteSigned
 .venv\Scripts\Activate.ps1
