@@ -20,6 +20,10 @@ def connexion():
 
 PAGE = """
 <h1>Réservation de salles</h1>
+<h2>Tables de la base</h2>
+<ul>
+  {% for table in tables %}<li>{{ table["name"] }}</li>{% endfor %}
+</ul>
 <h2>Salles</h2>
 <ul>
   {% for ligne in lignes %}<li>{{ ligne["nom"] }}</li>{% endfor %}
@@ -32,8 +36,9 @@ app = Flask(__name__)
 @app.get("/")
 def accueil():
     with connexion() as conn:
+        tables = conn.execute("SELECT name FROM sqlite_master WHERE type = 'table'").fetchall()
         lignes = conn.execute("SELECT nom FROM salles").fetchall()
-    return render_template_string(PAGE, lignes=lignes)
+    return render_template_string(PAGE, tables=tables, lignes=lignes)
 
 
 if __name__ == "__main__":

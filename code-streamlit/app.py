@@ -19,8 +19,12 @@ def connexion():
 
 
 st.title("Réservation de salles")
-st.header("Salles")
 
 with connexion() as conn:
+    tables = conn.execute("SELECT name FROM sqlite_master WHERE type = 'table'").fetchall()
     lignes = conn.execute("SELECT nom FROM salles").fetchall()
+
+st.header("Tables de la base")
+st.table([dict(table) for table in tables])
+st.header("Salles")
 st.table([dict(ligne) for ligne in lignes])

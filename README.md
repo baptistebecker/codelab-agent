@@ -136,6 +136,13 @@ Puis lancez l'application :
 
 `base.sql` contient les tables et des exemples. `data.db` se crée au premier lancement. Pour repartir de zéro, ou après un changement de `base.sql`, supprimez `data.db`. [Documentation de `sqlite3`](https://docs.python.org/3/library/sqlite3.html).
 
+| Table | Colonnes |
+|---|---|
+| `salles` | `id`, `nom`, `capacite`, `projecteur` |
+| `reservations` | `id`, `salle_id`, `personne`, `date`, `debut`, `fin`, `participants` |
+
+`projecteur` vaut 1 ou 0. Les dates sont au format `2026-11-09` et les heures au format `10:00`.
+
 ## Bien travailler avec l'agent
 
 - Une petite demande à la fois.
