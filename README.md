@@ -8,10 +8,11 @@ Séance 2 · En binôme · Avec un agent de code, OpenCode ou Mistral Vibe.
 
 ## Votre parcours
 
-- [ ] **1. Coder et relire** : l'application en petites demandes, avec une pull request et une relecture par fonctionnalité.
+- [ ] **1. Coder et relire** : l'application en petites demandes, avec une revue de l'agent par fonctionnalité.
 - [ ] **2. Ajouter les skills** : à l'annonce en séance, continuez avec les skills et regardez ce qui change.
-- [ ] **3. Faire évoluer** : une demande de changement sera annoncée en séance.
-- [ ] **4. Bonus** : écrire votre propre skill, ou ajouter ce qui est dans « Si vous avez fini ».
+- [ ] **3. Créer votre skill** : un skill pour la documentation de votre code.
+- [ ] **4. Faire évoluer** : une demande de changement sera annoncée en séance.
+- [ ] **5. Bonus** : ajouter ce qui est dans « Si vous avez fini ».
 
 `AGENTS.md` est déjà rempli. Lisez-le et ajoutez ce que vous voulez dans « À vous d'ajouter ».
 
@@ -150,41 +151,45 @@ Précis : « Ajoute la réservation d'une salle. Refuse les chevauchements : fin
 
 ## Travailler à deux
 
-Une seule personne utilise l'agent à la fois. Pour chaque fonctionnalité :
+Chacun travaille sur son PC. `git pull` avant de travailler, `git push` après chaque commit :
 
 ```bash
-git switch main
 git pull
-git switch -c nom-de-la-fonctionnalite
 ```
-
-Quand l'agent a terminé et que les tests passent :
 
 ```bash
 git add -A
 git commit -m "ajout de la fonctionnalité"
-git push -u origin nom-de-la-fonctionnalite
+git push
 ```
 
-Ouvrez ensuite une pull request sur GitHub.
+Si `git push` est refusé, votre partenaire a poussé entre-temps. Récupérez son travail, puis poussez à nouveau :
+
+```bash
+git pull --no-rebase --no-edit
+git push
+```
+
+En cas de conflit, corrigez les fichiers indiqués, puis faites `git add -A`, `git commit -m "fusion"` et `git push`.
 
 ## Relire chaque fonctionnalité
 
-1. Le pilote fait un commit, ouvre une nouvelle session de l'agent et demande : `Fais une revue de code de git diff main...HEAD, sans rien modifier`.
-2. Le relecteur récupère la branche avec `git fetch`, puis `git switch nom-de-la-fonctionnalite`. Il lance `pytest`, ouvre la page, puis classe chaque remarque : juste, fausse ou inutile.
-3. Le pilote fait corriger les remarques justes, puis fait `git add -A`, `git commit` et `git push`.
-4. Le relecteur fait `git pull` et vérifie. Il laisse un commentaire sur la pull request : ce qui est retenu ou rejeté, et pourquoi.
-5. Le relecteur fusionne la pull request sur GitHub, puis vous inversez les rôles.
+1. Faites un commit de la fonctionnalité.
+2. Dans une nouvelle session de l'agent, demandez : `Fais une revue de code de git show, sans rien modifier`.
+3. Lancez `pytest`, ouvrez la page, puis classez chaque remarque : juste, fausse ou inutile.
+4. Faites corriger les remarques justes par l'agent.
 
-Avant de fusionner, vérifiez trois points :
+Si votre dernier commit est une fusion, `git show` n'affiche pas votre travail. Demandez alors la revue de `git show HEAD^1`.
+
+Avant de passer à la suite, vérifiez trois points :
 
 - Est-ce bien ce qui était demandé, sans rien en plus ?
 - Un cas limite a-t-il été essayé : champ vide, doublon, conflit ?
-- Le relecteur sait-il expliquer ce code ?
+- Savez-vous expliquer ce code ?
 
 ## Ajouter les skills
 
-À faire à l'annonce en séance, depuis `main` à jour, à la racine de votre dépôt.
+À faire à l'annonce en séance, à la racine de votre dépôt, après un `git pull`.
 
 ```bash
 git clone https://github.com/umons-ig/codelab-skills ../codelab-skills
@@ -206,7 +211,16 @@ Ouvrez une nouvelle session de l'agent et continuez sur la fonctionnalité suiva
 
 Mistral Vibe ne lit ces skills que si vous faites confiance au dossier au lancement.
 
-Comparez avec vos premières fonctionnalités : la taille du changement, les fichiers ajoutés, les tests et ce que l'agent annonce. `git diff --stat main...HEAD` donne la taille. Un seul essai ne prouve rien, car l'agent ne répond pas pareil d'une fois à l'autre.
+Comparez avec vos premières fonctionnalités : la taille du changement, les fichiers ajoutés, les tests et ce que l'agent annonce. `git show --stat` donne la taille du dernier commit. Un seul essai ne prouve rien, car l'agent ne répond pas pareil d'une fois à l'autre.
+
+## Créer votre skill
+
+Chaque binôme crée un skill pour la documentation, pendant la réalisation avec les skills.
+
+- Avec Mistral Vibe : `/skill-creator Crée un skill expliquer-code : il lit git diff, résume en 5 lignes, dessine un diagramme de séquence et un flowchart`.
+- Avec OpenCode : demandez à l'agent d'écrire le fichier `.agents/skills/expliquer-code/SKILL.md`, avec la même description.
+
+Relisez le fichier créé et raccourcissez-le si besoin. Ouvrez ensuite une nouvelle session et appelez le skill : `/expliquer-code` avec Mistral Vibe, `Utilise le skill expliquer-code` avec OpenCode.
 
 ## Lancer l'agent
 

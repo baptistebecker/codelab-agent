@@ -24,7 +24,7 @@ Tables et exemples dans `base.sql`. `data.db` se crée au premier lancement. Sup
 - Une fonctionnalité à la fois.
 - Ajouter ou mettre à jour les tests à chaque fonctionnalité, puis lancer `pytest`.
 - Ne pas ajouter d'autre dépendance sans le demander.
-- Ne faire `git push` que si le binôme le demande. Ne pas fusionner : le binôme s'en charge.
+- Ne faire `git push` que si le binôme le demande.
 
 ## À vous d'ajouter
 <!-- Ajoutez ici ce que vous voulez que l'agent respecte. Par exemple :
