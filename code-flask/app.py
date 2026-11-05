@@ -41,5 +41,8 @@ def accueil():
     return render_template_string(PAGE, tables=tables, lignes=lignes)
 
 
+# Ajoutez vos pages ici : une fonction par page.
+
+
 if __name__ == "__main__":
     app.run(debug=True)

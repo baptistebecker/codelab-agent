@@ -28,3 +28,5 @@ st.header("Tables de la base")
 st.table([dict(table) for table in tables])
 st.header("Salles")
 st.table([dict(ligne) for ligne in lignes])
+
+# Ajoutez la suite de votre application ici.
