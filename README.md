@@ -155,7 +155,7 @@ Ouvrez ensuite une pull request sur GitHub.
 
 ## Relire chaque fonctionnalité
 
-1. Le pilote fait un commit, ouvre une nouvelle session de l'agent et demande : `Relis git diff main...HEAD sans rien modifier`.
+1. Le pilote fait un commit, ouvre une nouvelle session de l'agent et demande : `Fais une revue de code de git diff main...HEAD, sans rien modifier`.
 2. Le relecteur lance `pytest`, ouvre la page, puis classe chaque remarque : juste, fausse ou inutile.
 3. Le pilote fait corriger les remarques justes, puis fait `git add -A`, `git commit` et `git push`.
 4. Le relecteur laisse un commentaire sur la pull request : ce qui est retenu ou rejeté, et pourquoi.
@@ -174,10 +174,13 @@ Avant de fusionner, vérifiez trois points :
 ```bash
 git clone https://github.com/umons-ig/codelab-skills ../codelab-skills
 mkdir -p .agents/skills
-cp -R ../codelab-skills/revue-de-code ../codelab-skills/ajouter-fonctionnalite .agents/skills/
+cp -R ../codelab-skills/revue-de-code ../codelab-skills/ajouter-fonctionnalite ../codelab-skills/commit-push .agents/skills/
 git add -A
 git commit -m "ajoute les skills"
+git push
 ```
+
+Un seul membre du binôme le fait. L'autre fait ensuite `git pull`.
 
 Sous Windows (PowerShell), utilisez `New-Item -ItemType Directory -Force .agents/skills`, puis `Copy-Item -Recurse` pour chaque skill.
 
@@ -185,6 +188,7 @@ Ouvrez une nouvelle session de l'agent et continuez sur la fonctionnalité suiva
 
 - Pour coder, avec Mistral Vibe : `/ajouter-fonctionnalite`. Avec OpenCode : `Utilise le skill ajouter-fonctionnalite`.
 - Pour relire, avec Mistral Vibe : `/revue-de-code`. Avec OpenCode : `Utilise le skill revue-de-code`.
+- Pour faire un commit et pousser, avec Mistral Vibe : `/commit-push`. Avec OpenCode : `Utilise le skill commit-push`.
 
 Mistral Vibe ne lit ces skills que si vous faites confiance au dossier au lancement.
 
