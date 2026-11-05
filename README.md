@@ -65,8 +65,7 @@ Le framework (Flask, FastAPI ou Streamlit), l’organisation du code et l’inte
 ## À la fin de la séance
 
 - Le but : une application qui fonctionne, avec les fonctionnalités demandées.
-- Poussez votre travail sur GitHub avant les questions.
-- Trois questions individuelles, sur papier et machines fermées. Chacun doit comprendre tout le code.
+- Poussez votre travail sur GitHub.
 
 ---
 
