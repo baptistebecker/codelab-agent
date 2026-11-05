@@ -92,10 +92,12 @@ Gardez un dossier et supprimez l'autre. Chacun contient un `app.py` qui lit la b
 
 ## Installer et lancer
 
+Avec Streamlit, remplacez `code-flask` par `code-streamlit`.
+
 macOS ou Linux, depuis la racine du dépôt :
 
 ```bash
-cd code-flask  # ou cd code-streamlit
+cd code-flask
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
@@ -105,7 +107,7 @@ pytest
 Windows (PowerShell), depuis la racine du dépôt :
 
 ```powershell
-cd code-flask  # ou cd code-streamlit
+cd code-flask
 py -m venv .venv
 Set-ExecutionPolicy -Scope Process RemoteSigned
 .venv\Scripts\Activate.ps1
