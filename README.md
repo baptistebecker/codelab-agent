@@ -4,7 +4,7 @@
 
 Séance 2 · En binôme · Avec un agent de code, OpenCode ou Mistral Vibe.
 
-[Démarrer](#démarrer) · [Cahier des charges en PDF](CAHIER_DES_CHARGES.pdf)
+[Démarrer](#démarrer)
 
 ## Votre parcours
 
@@ -60,7 +60,7 @@ Chercher une salle libre selon le créneau et la capacité, afficher le taux d�
 
 ## Ce qui est libre
 
-Le framework (Flask, FastAPI ou Streamlit), l’organisation du code et l’interface. La base SQLite est fournie avec des exemples, et vous pouvez la modifier. Python, SQLite et pytest sont imposés.
+Le framework (Flask ou Streamlit), l’organisation du code et l’interface. La base SQLite est fournie avec des exemples, et vous pouvez la modifier. Python, SQLite et pytest sont imposés.
 
 ## À la fin de la séance
 
@@ -88,7 +88,7 @@ git clone <adresse-de-votre-dépôt>
 - `code-streamlit` : le plus simple. [Premiers pas](https://docs.streamlit.io/get-started).
 - `code-flask` : plus de contrôle. [Démarrage rapide](https://flask.palletsprojects.com/en/stable/quickstart/).
 
-Gardez un dossier et supprimez l'autre. Chacun contient un `app.py` qui lit la base et l'affiche. FastAPI est possible aussi : [premiers pas](https://fastapi.tiangolo.com/tutorial/first-steps/).
+Gardez un dossier et supprimez l'autre. Chacun contient un `app.py` qui lit la base et l'affiche.
 
 ## Installer et lancer
 
@@ -174,7 +174,7 @@ Avant de fusionner, vérifiez trois points :
 ```bash
 git clone https://github.com/umons-ig/codelab-skills ../codelab-skills
 mkdir -p .agents/skills
-cp -R ../codelab-skills/revue-de-code ../codelab-skills/ajouter-fonctionnalite ../codelab-skills/commit-push .agents/skills/
+cp -R ../codelab-skills/ajouter-fonctionnalite ../codelab-skills/commit-push .agents/skills/
 git add -A
 git commit -m "ajoute les skills"
 git push
@@ -187,12 +187,11 @@ Sous Windows (PowerShell), utilisez `New-Item -ItemType Directory -Force .agents
 Ouvrez une nouvelle session de l'agent et continuez sur la fonctionnalité suivante :
 
 - Pour coder, avec Mistral Vibe : `/ajouter-fonctionnalite`. Avec OpenCode : `Utilise le skill ajouter-fonctionnalite`.
-- Pour relire, avec Mistral Vibe : `/revue-de-code`. Avec OpenCode : `Utilise le skill revue-de-code`.
 - Pour faire un commit et pousser, avec Mistral Vibe : `/commit-push`. Avec OpenCode : `Utilise le skill commit-push`.
 
 Mistral Vibe ne lit ces skills que si vous faites confiance au dossier au lancement.
 
-Comparez avec vos premières fonctionnalités : la taille du changement, les fichiers ajoutés, les tests, ce que l'agent annonce et la qualité de la revue. `git diff --stat main...HEAD` donne la taille. Un seul essai ne prouve rien, car l'agent ne répond pas pareil d'une fois à l'autre.
+Comparez avec vos premières fonctionnalités : la taille du changement, les fichiers ajoutés, les tests et ce que l'agent annonce. `git diff --stat main...HEAD` donne la taille. Un seul essai ne prouve rien, car l'agent ne répond pas pareil d'une fois à l'autre.
 
 ## Lancer l'agent
 
