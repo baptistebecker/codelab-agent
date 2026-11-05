@@ -22,12 +22,12 @@ st.title("Réservation de salles")
 
 with ouvrir_base() as conn:
     tables = conn.execute("SELECT name FROM sqlite_master WHERE type = 'table'").fetchall()
-    lignes = conn.execute("SELECT nom FROM salles").fetchall()
+    salles = conn.execute("SELECT nom FROM salles").fetchall()
 
 st.header("Tables de la base")
 st.table([dict(table) for table in tables])
 st.header("Salles")
-st.table([dict(ligne) for ligne in lignes])
+st.table([dict(salle) for salle in salles])
 
 # Exemple : un formulaire qui ajoute une salle.
 with st.form("ajouter_salle", clear_on_submit=True):

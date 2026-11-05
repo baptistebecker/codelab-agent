@@ -26,7 +26,7 @@ PAGE = """
 </ul>
 <h2>Salles</h2>
 <ul>
-  {% for ligne in lignes %}<li>{{ ligne["nom"] }}</li>{% endfor %}
+  {% for salle in salles %}<li>{{ salle["nom"] }}</li>{% endfor %}
 </ul>
 <form method="post" action="/salles">
   <input name="nom" placeholder="Nom" required>
@@ -42,8 +42,8 @@ app = Flask(__name__)
 def accueil():
     with ouvrir_base() as conn:
         tables = conn.execute("SELECT name FROM sqlite_master WHERE type = 'table'").fetchall()
-        lignes = conn.execute("SELECT nom FROM salles").fetchall()
-    return render_template_string(PAGE, tables=tables, lignes=lignes)
+        salles = conn.execute("SELECT nom FROM salles").fetchall()
+    return render_template_string(PAGE, tables=tables, salles=salles)
 
 
 # Exemple : reçoit le formulaire de PAGE et ajoute une salle.
