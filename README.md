@@ -73,6 +73,17 @@ Le framework (Flask ou Streamlit), l’organisation du code et l’interface. La
 
 Python 3.11 ou plus est nécessaire.
 
+## Préparer Git
+
+Une seule fois par PC :
+
+```bash
+git config --global user.name "Votre nom"
+git config --global user.email "votre@adresse.be"
+```
+
+GitHub n'accepte pas votre mot de passe dans le terminal. Si `git clone` refuse la connexion, installez [GitHub CLI](https://cli.github.com) et lancez `gh auth login`.
+
 ## Créer votre dépôt
 
 1. Un membre du binôme ouvre <https://github.com/umons-ig/codelab-agent>, clique sur **Use this template**, puis **Create a new repository**, et choisit **Private**.
@@ -160,9 +171,9 @@ Ouvrez ensuite une pull request sur GitHub.
 ## Relire chaque fonctionnalité
 
 1. Le pilote fait un commit, ouvre une nouvelle session de l'agent et demande : `Fais une revue de code de git diff main...HEAD, sans rien modifier`.
-2. Le relecteur lance `pytest`, ouvre la page, puis classe chaque remarque : juste, fausse ou inutile.
+2. Le relecteur récupère la branche avec `git fetch`, puis `git switch nom-de-la-fonctionnalite`. Il lance `pytest`, ouvre la page, puis classe chaque remarque : juste, fausse ou inutile.
 3. Le pilote fait corriger les remarques justes, puis fait `git add -A`, `git commit` et `git push`.
-4. Le relecteur laisse un commentaire sur la pull request : ce qui est retenu ou rejeté, et pourquoi.
+4. Le relecteur fait `git pull` et vérifie. Il laisse un commentaire sur la pull request : ce qui est retenu ou rejeté, et pourquoi.
 5. Le relecteur fusionne la pull request sur GitHub, puis vous inversez les rôles.
 
 Avant de fusionner, vérifiez trois points :
@@ -199,7 +210,7 @@ Comparez avec vos premières fonctionnalités : la taille du changement, les fic
 
 ## Lancer l'agent
 
-Installez un des deux agents, puis tapez sa commande dans le terminal, **dans ce dossier** :
+Installez un des deux agents, puis tapez sa commande dans le terminal, **à la racine du dépôt**. Si vous êtes dans votre dossier de code, revenez-y avec `cd ..` :
 
 | Agent | Installation | Lancement |
 |---|---|---|
