@@ -134,6 +134,13 @@ Puis lancez l'application :
 
 Sur Mac, gardez `127.0.0.1` pour Flask. Avec `localhost`, vous pouvez tomber sur AirPlay, qui utilise aussi le port 5000, et obtenir une erreur 403.
 
+## Comprendre le code
+
+Vous travaillez dans `app.py`. `base.py` ouvre la base : vous n'avez pas besoin de le modifier.
+
+- **Flask** : chaque adresse a sa fonction. `accueil` lit la base et affiche `PAGE`, qui contient le HTML. `ajouter_salle` reçoit le formulaire, écrit dans la base et revient à l'accueil. Pour une nouvelle fonctionnalité, ajoutez un formulaire dans `PAGE` et une fonction.
+- **Streamlit** : le fichier s'exécute de haut en bas, puis à nouveau à chaque clic. Pour une nouvelle fonctionnalité, ajoutez vos champs, vos boutons et vos requêtes à la suite du fichier.
+
 ## La base
 
 `base.sql` contient les tables et des exemples. `data.db` se crée au premier lancement. Pour repartir de zéro, ou après un changement de `base.sql`, supprimez `data.db`. [Documentation de `sqlite3`](https://docs.python.org/3/library/sqlite3.html).
