@@ -76,7 +76,7 @@ Python 3.11 ou plus est nécessaire.
 ## Créer votre dépôt
 
 1. Un membre du binôme ouvre <https://github.com/umons-ig/codelab-agent>, clique sur **Use this template**, puis **Create a new repository**, et choisit **Private**.
-2. Dans **Settings**, puis **Collaborators**, il ajoute son partenaire et `Tanguyvans`. Le partenaire accepte l'invitation.
+2. Dans **Settings**, puis **Collaborators**, il ajoute son partenaire. Le partenaire accepte l'invitation.
 3. Chacun récupère le dépôt sur sa machine, puis ouvre le dossier :
 
 ```bash
