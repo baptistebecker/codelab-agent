@@ -132,6 +132,8 @@ Puis lancez l'application :
 - Flask : `python app.py`, puis <http://127.0.0.1:5000>
 - Streamlit : `streamlit run app.py`
 
+Sur Mac, gardez `127.0.0.1` pour Flask. Avec `localhost`, vous pouvez tomber sur AirPlay, qui utilise aussi le port 5000, et obtenir une erreur 403.
+
 ## La base
 
 `base.sql` contient les tables et des exemples. `data.db` se crée au premier lancement. Pour repartir de zéro, ou après un changement de `base.sql`, supprimez `data.db`. [Documentation de `sqlite3`](https://docs.python.org/3/library/sqlite3.html).
