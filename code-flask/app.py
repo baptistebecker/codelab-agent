@@ -1,14 +1,14 @@
 import sqlite3
 from pathlib import Path
 
-from flask import Flask, render_template_string
+from flask import Flask, redirect, render_template_string, request
 
 RACINE = Path(__file__).parent.parent
 BASE = RACINE / "data.db"
 
 
-def connexion():
-    """Ouvre la base. Au premier lancement, elle est créée depuis base.sql."""
+def ouvrir_base():
+    """Ouvre la base et la crée au premier lancement. Inutile de modifier cette fonction."""
     neuve = not BASE.exists()
     conn = sqlite3.connect(BASE)
     conn.row_factory = sqlite3.Row
@@ -28,6 +28,11 @@ PAGE = """
 <ul>
   {% for ligne in lignes %}<li>{{ ligne["nom"] }}</li>{% endfor %}
 </ul>
+<form method="post" action="/salles">
+  <input name="nom" placeholder="Nom" required>
+  <input name="capacite" type="number" min="1" placeholder="Capacité" required>
+  <button>Ajouter</button>
+</form>
 """
 
 app = Flask(__name__)
@@ -35,13 +40,23 @@ app = Flask(__name__)
 
 @app.get("/")
 def accueil():
-    with connexion() as conn:
+    with ouvrir_base() as conn:
         tables = conn.execute("SELECT name FROM sqlite_master WHERE type = 'table'").fetchall()
         lignes = conn.execute("SELECT nom FROM salles").fetchall()
     return render_template_string(PAGE, tables=tables, lignes=lignes)
 
 
-# Ajoutez vos pages ici : une fonction par page.
+# Exemple : reçoit le formulaire de PAGE et ajoute une salle.
+@app.post("/salles")
+def ajouter_salle():
+    nom = request.form["nom"]
+    capacite = int(request.form["capacite"])
+    with ouvrir_base() as conn:
+        conn.execute("INSERT INTO salles (nom, capacite) VALUES (?, ?)", (nom, capacite))
+    return redirect("/")
+
+
+# Ajoutez vos fonctions ici. Le HTML va dans PAGE.
 
 
 if __name__ == "__main__":

@@ -100,7 +100,7 @@ git clone <adresse-de-votre-dépôt>
 - `code-streamlit` : le plus simple. [Premiers pas](https://docs.streamlit.io/get-started).
 - `code-flask` : plus de contrôle. [Démarrage rapide](https://flask.palletsprojects.com/en/stable/quickstart/).
 
-Gardez un dossier et supprimez l'autre. Chacun contient un `app.py` qui lit la base et l'affiche.
+Gardez un dossier et supprimez l'autre. Chacun contient un `app.py` qui lit la base, l'affiche et donne un exemple de formulaire.
 
 ## Installer et lancer
 
