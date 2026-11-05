@@ -21,14 +21,23 @@ Tables et exemples dans `base.sql`. `data.db` se crée au premier lancement. Sup
 - Il n'y a pas d'authentification. La semaine va du lundi au dimanche.
 
 ## Façon de travailler
+
+### Développement & Qualité du code
 - Une fonctionnalité à la fois.
-- Ajouter ou mettre à jour les tests à chaque fonctionnalité, puis lancer `pytest`.
-- Ne pas ajouter d'autre dépendance sans le demander.
-- Ne faire `git push` que si le binôme le demande.
+- Ne rien ajouter ou anticiper qui n'est pas explicitement demandé.
+- Ajouter ou mettre à jour les tests unitaires/d'intégration à chaque nouvelle fonctionnalité, puis valider avec `pytest`.
+- Ne pas ajouter de dépendances supplémentaires (packages Python/pip) sans demande explicite.
+- Isoler la logique métier des frameworks web (Flask/Streamlit) dans des modules dédiés.
+
+### Git & GitHub
+- **Commits atomiques** : Faire un commit clair et descriptif dès qu'une fonctionnalité ou un correctif est validé par les tests (ex: `feat: ajout validation capacite salle` ou `test: ajout tests chevauchement horaire`).
+- **Commits en anglais ou en français** : Conserver un style uniforme et explicite pour tous les messages de commit.
+- **Gestion des pushs** : Ne faire `git push` que si le binôme le demande ou valide l'état du code.
+- **Résolution des conflits** : 
+  - Avant de pousser ou après un `git pull`, en cas de conflit, toujours privilégier l'intégration propre en relançant la suite de tests `pytest` complète.
+  - Ne jamais écraser le travail du binôme avec un `git push --force`.
+  - Résoudre les conflits fichier par fichier en expliquant au binôme les choix effectués si nécessaire.
 
 ## À vous d'ajouter
-<!-- Ajoutez ici ce que vous voulez que l'agent respecte. Par exemple :
-- Ne rien ajouter qui n'est pas demandé.
-- Mettre les règles dans un fichier `regles.py`, sans framework.
-- Utiliser une base séparée pour les tests.
--->
+<!-- Ajoutez ici d'autres consignes spécifiques selon l'évolution du TP -->
+- Cocher les tâches dans le readme lorsqu'elles sont effectuées
