@@ -29,10 +29,10 @@ Dans un bâtiment universitaire, les salles se réservent par mail auprès du se
 
 ## Ce que l’application doit faire
 
-- [ ] Ajouter, modifier ou supprimer une salle
-- [ ] Réserver une salle au nom d’une personne
-- [ ] Annuler une réservation
-- [ ] Afficher le planning d’une salle sur une semaine
+- [x] Ajouter, modifier ou supprimer une salle
+- [x] Réserver une salle au nom d’une personne
+- [x] Annuler une réservation
+- [x] Afficher le planning d’une salle sur une semaine
 
 ## Les règles
 
@@ -136,10 +136,15 @@ Sur Mac, gardez `127.0.0.1` pour Flask. Avec `localhost`, vous pouvez tomber sur
 
 ## Comprendre le code
 
-Vous travaillez dans `app.py`. `base.py` ouvre la base : vous n'avez pas besoin de le modifier.
+Le code Flask est organisé en modules :
 
-- **Flask** : chaque adresse a sa fonction. `accueil` lit la base et affiche `PAGE`, qui contient le HTML. `ajouter_salle` reçoit le formulaire, écrit dans la base et revient à l'accueil. Pour une nouvelle fonctionnalité, ajoutez un formulaire dans `PAGE` et une fonction.
-- **Streamlit** : le fichier s'exécute de haut en bas, puis à nouveau à chaque clic. Pour une nouvelle fonctionnalité, ajoutez vos champs, vos boutons et vos requêtes à la suite du fichier.
+- `app.py` : les routes et la petite API JSON appelée par l'interface.
+- `metier.py` : les règles métier et les requêtes SQL, indépendantes de Flask.
+- `templates/` : la page HTML du planning et les fenêtres de dialogue.
+- `static/` : le style et les interactions de l'interface.
+- `base.py` ouvre la base : vous n'avez pas besoin de le modifier.
+
+Pour une nouvelle fonctionnalité, ajoutez la règle dans `metier.py` et son test, puis la route et l'élément d'interface correspondants.
 
 ## La base
 

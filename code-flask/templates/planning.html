@@ -1,0 +1,359 @@
+{% extends "base.html" %}
+
+{% block title %}Planning · Réservation de salles{% endblock %}
+
+{% block content %}
+<header class="topbar">
+  <a class="brand" href="{{ url_for('accueil') }}">
+    <span class="brand-mark" aria-hidden="true">R</span>
+    <span class="brand-text">
+      <strong>Réservation</strong>
+      <small>Bâtiment universitaire</small>
+    </span>
+  </a>
+  <div class="topbar-right">
+    <span class="topbar-date">{{ date_longue }}</span>
+    <span class="topbar-rule" aria-hidden="true"></span>
+    <span class="topbar-note">Planification des salles</span>
+  </div>
+</header>
+
+<main class="layout">
+  <aside class="sidebar" aria-label="Liste des salles">
+    <div class="sidebar-head">
+      <h2>Salles</h2>
+      <button class="btn btn-ghost btn-sm" type="button" data-ouvrir-salle>
+        <svg class="icon" aria-hidden="true"><use href="#i-plus"></use></svg>
+        Ajouter
+      </button>
+    </div>
+
+    <div class="salle-list">
+      {% for item in salles %}
+      <div class="salle-item{% if salle and item.id == salle.id %} is-active{% endif %}">
+        <a class="salle-lien"
+           href="{{ url_for('accueil', salle=item.id, semaine=semaine.isoformat()) }}"
+           {% if salle and item.id == salle.id %}aria-current="page"{% endif %}>
+          <span class="salle-nom">{{ item.nom }}</span>
+          <span class="salle-details">
+            <svg class="icon icon-xs" aria-hidden="true"><use href="#i-users"></use></svg>
+            {{ item.capacite }} places
+            {% if item.projecteur %}
+            <span class="sep" aria-hidden="true">·</span>
+            <svg class="icon icon-xs" aria-hidden="true"><use href="#i-projector"></use></svg>
+            Projecteur
+            {% endif %}
+          </span>
+          <span class="salle-stats">
+            {% if item.nb_reservations %}
+            {{ item.nb_reservations }} réservation{% if item.nb_reservations > 1 %}s{% endif %} · {{ item.duree_reservee }}
+            {% else %}
+            Aucune réservation
+            {% endif %}
+          </span>
+        </a>
+        <div class="salle-actions">
+          <button type="button" class="icon-btn icon-btn-sm"
+                  data-modifier-salle
+                  data-id="{{ item.id }}"
+                  data-nom="{{ item.nom }}"
+                  data-capacite="{{ item.capacite }}"
+                  data-projecteur="{{ item.projecteur }}"
+                  aria-label="Modifier {{ item.nom }}" title="Modifier">
+            <svg class="icon" aria-hidden="true"><use href="#i-edit"></use></svg>
+          </button>
+          <button type="button" class="icon-btn icon-btn-sm icon-btn-danger"
+                  data-supprimer-salle
+                  data-id="{{ item.id }}"
+                  data-nom="{{ item.nom }}"
+                  aria-label="Supprimer {{ item.nom }}" title="Supprimer">
+            <svg class="icon" aria-hidden="true"><use href="#i-trash"></use></svg>
+          </button>
+        </div>
+      </div>
+      {% else %}
+      <p class="sidebar-vide">Aucune salle pour le moment.</p>
+      {% endfor %}
+    </div>
+
+    <div class="sidebar-foot">
+      <p><strong>Règles</strong> Du lundi au dimanche, de 8 h à 20 h. Une réservation dure de 30 min à 4 h.</p>
+    </div>
+  </aside>
+
+  <section class="workspace">
+    {% if salle %}
+    <div class="workspace-head">
+      <div>
+        <p class="eyebrow">Planning hebdomadaire</p>
+        <h1>{{ salle.nom }}</h1>
+        <p class="workspace-sub">
+          <span class="meta-item">
+            <svg class="icon icon-xs" aria-hidden="true"><use href="#i-users"></use></svg>
+            {{ salle.capacite }} places
+          </span>
+          <span class="meta-sep" aria-hidden="true">·</span>
+          <span class="meta-item">
+            <svg class="icon icon-xs" aria-hidden="true"><use href="#i-projector"></use></svg>
+            {% if salle.projecteur %}Projecteur{% else %}Sans projecteur{% endif %}
+          </span>
+        </p>
+      </div>
+      <button class="btn btn-primary" type="button" id="btn-reserver">
+        <svg class="icon" aria-hidden="true"><use href="#i-plus"></use></svg>
+        Réserver
+      </button>
+    </div>
+
+    <div class="planning-panel">
+      <div class="weekbar">
+        <div class="week-nav">
+          <a class="icon-btn"
+             href="{{ url_for('accueil', salle=salle.id, semaine=semaine_precedente) }}"
+             aria-label="Semaine précédente" title="Semaine précédente">
+            <svg class="icon" aria-hidden="true"><use href="#i-left"></use></svg>
+          </a>
+          <span class="week-label">{{ libelle_semaine }}</span>
+          <a class="icon-btn"
+             href="{{ url_for('accueil', salle=salle.id, semaine=semaine_suivante) }}"
+             aria-label="Semaine suivante" title="Semaine suivante">
+            <svg class="icon" aria-hidden="true"><use href="#i-right"></use></svg>
+          </a>
+          <a class="btn btn-ghost btn-sm"
+             href="{{ url_for('accueil', salle=salle.id, semaine=semaine_courante) }}">Aujourd'hui</a>
+        </div>
+        <p class="week-hint">
+          <svg class="icon icon-xs" aria-hidden="true"><use href="#i-calendar"></use></svg>
+          Cliquez sur un créneau libre pour réserver
+        </p>
+      </div>
+
+      <div class="calendar-scroll">
+        <div class="calendar" id="calendrier">
+          <div class="cal-header" role="row">
+            <div class="cal-gutter" aria-hidden="true"></div>
+            {% for jour in jours %}
+            <div class="cal-day-head{% if jour.aujourdhui %} is-today{% endif %}" role="columnheader">
+              <span class="jour-nom">{{ jour.nom }}</span>
+              <span class="jour-num">{{ jour.numero }}</span>
+              <span class="jour-mois">{{ jour.mois }}</span>
+            </div>
+            {% endfor %}
+          </div>
+
+          <div class="cal-body">
+            <div class="cal-times" aria-hidden="true">
+              {% for heure in heures %}
+              <span class="cal-time{% if loop.first %} is-first{% elif loop.last %} is-last{% endif %}"
+                    style="--position: {{ heure.position }}%">{{ heure.libelle }}</span>
+              {% endfor %}
+            </div>
+
+            {% for jour in jours %}
+            {% set jour_index = loop.index0 %}
+            <div class="cal-col{% if jour.aujourdhui %} is-today{% endif %}"
+                 data-date="{{ jour.iso }}"
+                 aria-label="{{ jour.nom }} {{ jour.numero }} {{ jour.mois }}">
+              {% for evenement in evenements %}
+              {% if evenement.jour_index == jour_index %}
+              <button type="button"
+                      class="resa resa-{{ evenement.couleur }}{% if evenement.classe_duree %} {{ evenement.classe_duree }}{% endif %}"
+                      style="--top: {{ evenement.top }}%; --height: {{ evenement.hauteur }}%;"
+                      data-resa-id="{{ evenement.id }}"
+                      data-personne="{{ evenement.personne }}"
+                      data-date="{{ evenement.date }}"
+                      data-debut="{{ evenement.debut }}"
+                      data-fin="{{ evenement.fin }}"
+                      data-participants="{{ evenement.participants }}"
+                      aria-label="Réservation de {{ evenement.personne }} de {{ evenement.debut }} à {{ evenement.fin }}">
+                <span class="resa-time">{{ evenement.debut }} – {{ evenement.fin }}</span>
+                <span class="resa-nom">{{ evenement.personne }}</span>
+                <span class="resa-meta">{{ evenement.participants }} pers.</span>
+              </button>
+              {% endif %}
+              {% endfor %}
+
+              {% if ligne_actuelle and ligne_actuelle.jour_index == jour_index %}
+              <div class="now-line" style="--top: {{ ligne_actuelle.top }}%" aria-label="Heure actuelle">
+                <span class="now-dot"></span>
+              </div>
+              {% endif %}
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+    {% else %}
+    <div class="empty-state">
+      <svg class="empty-illustration" viewBox="0 0 96 84" fill="none" aria-hidden="true">
+        <rect x="10" y="16" width="76" height="60" rx="9" stroke="currentColor" stroke-width="2"/>
+        <path d="M10 34h76M28 9v14M68 9v14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <path d="M26 46h14M26 58h26M54 46h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".55"/>
+      </svg>
+      <p class="eyebrow">Première étape</p>
+      <h1>Aucune salle</h1>
+      <p>Ajoutez une salle pour commencer à organiser les réservations de la semaine.</p>
+      <button class="btn btn-primary" type="button" data-ouvrir-salle>
+        <svg class="icon" aria-hidden="true"><use href="#i-plus"></use></svg>
+        Ajouter une salle
+      </button>
+    </div>
+    {% endif %}
+  </section>
+</main>
+
+<dialog class="dialog" id="salle-dialog" aria-labelledby="salle-dialog-titre">
+  <form id="salle-form">
+    <header class="dialog-head">
+      <div>
+        <p class="eyebrow" id="salle-dialog-surtitre">Gestion</p>
+        <h2 id="salle-dialog-titre">Ajouter une salle</h2>
+      </div>
+      <button type="button" class="icon-btn" data-fermer-dialogue aria-label="Fermer">
+        <svg class="icon" aria-hidden="true"><use href="#i-close"></use></svg>
+      </button>
+    </header>
+    <div class="dialog-body">
+      <input type="hidden" name="id">
+      <div class="form-grid">
+        <label class="field field-wide">
+          <span>Nom de la salle</span>
+          <input name="nom" type="text" maxlength="60" required placeholder="Par exemple, S3" autocomplete="off">
+        </label>
+        <label class="field">
+          <span>Capacité</span>
+          <input name="capacite" type="number" min="1" step="1" required value="12">
+        </label>
+        <label class="checkbox">
+          <input name="projecteur" type="checkbox">
+          <span>
+            <strong>Projecteur</strong>
+            <small>La salle dispose d'un vidéoprojecteur</small>
+          </span>
+        </label>
+      </div>
+      <p class="form-error" id="salle-error" role="alert" hidden></p>
+    </div>
+    <footer class="dialog-foot">
+      <button type="button" class="btn btn-ghost" data-fermer-dialogue>Annuler</button>
+      <button type="submit" class="btn btn-primary" id="salle-submit">Ajouter la salle</button>
+    </footer>
+  </form>
+</dialog>
+
+{% if salle %}
+<dialog class="dialog" id="reservation-dialog" aria-labelledby="reservation-dialog-titre">
+  <form id="reservation-form">
+    <header class="dialog-head">
+      <div>
+        <p class="eyebrow">{{ salle.nom }} · {{ libelle_semaine }}</p>
+        <h2 id="reservation-dialog-titre">Nouvelle réservation</h2>
+      </div>
+      <button type="button" class="icon-btn" data-fermer-dialogue aria-label="Fermer">
+        <svg class="icon" aria-hidden="true"><use href="#i-close"></use></svg>
+      </button>
+    </header>
+    <div class="dialog-body">
+      <input type="hidden" name="salle_id" value="{{ salle.id }}">
+      <div class="form-grid">
+        <label class="field field-wide">
+          <span>Personne</span>
+          <input name="personne" type="text" maxlength="80" required placeholder="Nom de la personne" autocomplete="off">
+        </label>
+        <label class="field">
+          <span>Date</span>
+          <input name="date" type="date" required>
+        </label>
+        <label class="field">
+          <span>Participants</span>
+          <input name="participants" type="number" min="1" max="{{ salle.capacite }}" step="1" required value="1">
+          <small>{{ salle.capacite }} places maximum</small>
+        </label>
+        <label class="field">
+          <span>Début</span>
+          <select name="debut" required>
+            {% for heure in options_debut %}
+            <option value="{{ heure }}">{{ heure }}</option>
+            {% endfor %}
+          </select>
+        </label>
+        <label class="field">
+          <span>Fin</span>
+          <select name="fin" required>
+            {% for heure in options_fin %}
+            <option value="{{ heure }}">{{ heure }}</option>
+            {% endfor %}
+          </select>
+        </label>
+      </div>
+      <p class="form-error" id="reservation-error" role="alert" hidden></p>
+      <p class="form-help">Créneaux de 8 h à 20 h, durée de 30 min à 4 h. Finir à 12 h et commencer à 12 h est autorisé.</p>
+    </div>
+    <footer class="dialog-foot">
+      <button type="button" class="btn btn-ghost" data-fermer-dialogue>Annuler</button>
+      <button type="submit" class="btn btn-primary">Réserver</button>
+    </footer>
+  </form>
+</dialog>
+
+<dialog class="dialog dialog-sm" id="detail-dialog" aria-labelledby="detail-titre">
+  <div class="dialog-head">
+    <div>
+      <p class="eyebrow" id="detail-date">Réservation</p>
+      <h2 id="detail-titre">Détails</h2>
+    </div>
+    <button type="button" class="icon-btn" data-fermer-dialogue aria-label="Fermer">
+      <svg class="icon" aria-hidden="true"><use href="#i-close"></use></svg>
+    </button>
+  </div>
+  <div class="dialog-body">
+    <dl class="detail-list">
+      <div class="detail-item">
+        <dt>Personne</dt>
+        <dd id="detail-personne">—</dd>
+      </div>
+      <div class="detail-item">
+        <dt>Participants</dt>
+        <dd id="detail-participants">—</dd>
+      </div>
+      <div class="detail-item">
+        <dt>Horaire</dt>
+        <dd id="detail-horaire">—</dd>
+      </div>
+      <div class="detail-item">
+        <dt>Salle</dt>
+        <dd>{{ salle.nom }}</dd>
+      </div>
+    </dl>
+  </div>
+  <footer class="dialog-foot dialog-foot-between">
+    <button type="button" class="btn btn-danger-ghost" id="btn-annuler-reservation">
+      <svg class="icon" aria-hidden="true"><use href="#i-trash"></use></svg>
+      Annuler la réservation
+    </button>
+    <button type="button" class="btn btn-ghost" data-fermer-dialogue>Fermer</button>
+  </footer>
+</dialog>
+{% endif %}
+
+<dialog class="dialog dialog-sm" id="confirm-dialog" aria-labelledby="confirm-titre">
+  <div class="dialog-head">
+    <div>
+      <p class="eyebrow">Confirmation</p>
+      <h2 id="confirm-titre">Supprimer ?</h2>
+    </div>
+  </div>
+  <div class="dialog-body">
+    <p class="confirm-text" id="confirm-texte"></p>
+  </div>
+  <footer class="dialog-foot">
+    <button type="button" class="btn btn-ghost" data-fermer-dialogue>Annuler</button>
+    <button type="button" class="btn btn-danger" id="confirm-valider">Supprimer</button>
+  </footer>
+</dialog>
+
+<script>
+  window.PLANNING = {{ config|tojson }};
+</script>
+{% endblock %}
