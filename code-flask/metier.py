@@ -215,6 +215,22 @@ def creer_reservation(conn, salle_id, personne, jour, debut, fin, participants):
             f"de {conflit['debut']} à {conflit['fin']}."
         )
 
+    conflit_personne = conn.execute(
+        """
+        SELECT salle_id, debut, fin
+        FROM reservations
+        WHERE personne = ? AND date = ? AND debut < ? AND fin > ?
+        ORDER BY debut
+        LIMIT 1
+        """,
+        (personne, jour.isoformat(), fin_normalisee, debut_normalise),
+    ).fetchone()
+    if conflit_personne is not None:
+        raise ErreurMetier(
+            f"{personne} a déjà une réservation le {jour.isoformat()} "
+            f"de {conflit_personne['debut']} à {conflit_personne['fin']}."
+        )
+
     curseur = conn.execute(
         """
         INSERT INTO reservations (salle_id, personne, date, debut, fin, participants)

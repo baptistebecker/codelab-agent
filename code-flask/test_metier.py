@@ -43,6 +43,18 @@ def test_accepte_deux_creneaux_adjacents(connexion):
     assert connexion.execute("SELECT COUNT(*) FROM reservations").fetchone()[0] == 3
 
 
+def test_refuse_un_chevauchement_pour_la_meme_personne_dans_une_autre_salle(connexion):
+    metier.creer_reservation(connexion, 1, "Bob", "2026-11-09", "08:00", "09:00", 5)
+    with pytest.raises(metier.ErreurMetier, match="déjà une réservation"):
+        metier.creer_reservation(connexion, 2, "Bob", "2026-11-09", "08:30", "09:30", 5)
+
+
+def test_accepte_deux_creneaux_adjacents_pour_la_meme_personne(connexion):
+    metier.creer_reservation(connexion, 1, "Bob", "2026-11-09", "08:00", "09:00", 5)
+    metier.creer_reservation(connexion, 2, "Bob", "2026-11-09", "09:00", "10:00", 5)
+    assert connexion.execute("SELECT COUNT(*) FROM reservations").fetchone()[0] == 3
+
+
 def test_refuse_une_capacite_depassee(connexion):
     with pytest.raises(metier.ErreurMetier, match="maximum 20"):
         metier.creer_reservation(

@@ -123,6 +123,33 @@ def test_refuse_une_reservation_en_chevauchement(client):
     assert "indisponible" in reponse.get_json()["erreur"]
 
 
+def test_refuse_un_chevauchement_pour_la_meme_personne(client):
+    client.post(
+        "/api/reservations",
+        json={
+            "salle_id": 1,
+            "personne": "Bob",
+            "date": "2026-11-09",
+            "debut": "08:00",
+            "fin": "09:00",
+            "participants": 5,
+        },
+    )
+    reponse = client.post(
+        "/api/reservations",
+        json={
+            "salle_id": 2,
+            "personne": "Bob",
+            "date": "2026-11-09",
+            "debut": "08:30",
+            "fin": "09:30",
+            "participants": 5,
+        },
+    )
+    assert reponse.status_code == 400
+    assert "déjà une réservation" in reponse.get_json()["erreur"]
+
+
 def test_refuse_une_reservation_au_dela_de_la_capacite(client):
     reponse = client.post(
         "/api/reservations",
