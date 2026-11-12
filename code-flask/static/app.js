@@ -278,6 +278,9 @@
           debut: resaFormulaire.elements.debut.value,
           fin: resaFormulaire.elements.fin.value,
           participants: Number(resaFormulaire.elements.participants.value),
+          repeter: resaFormulaire.elements.repeter.checked
+            ? Number(resaFormulaire.elements.semaines.value)
+            : 0,
         });
         flashPuisNavigation(resultat.redirect, "Réservation enregistrée.");
       } catch (erreur) {

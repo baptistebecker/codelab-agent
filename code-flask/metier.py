@@ -170,7 +170,7 @@ def statistiques_semaine(conn, lundi):
     return statistiques
 
 
-def creer_reservation(conn, salle_id, personne, jour, debut, fin, participants):
+def creer_reservation(conn, salle_id, personne, jour, debut, fin, participants, repeter=0):
     salle = trouver_salle(conn, salle_id)
     personne = _texte(personne, "Le nom de la personne est obligatoire.")
     jour = analyser_date(jour)
@@ -197,49 +197,74 @@ def creer_reservation(conn, salle_id, personne, jour, debut, fin, participants):
             f"La salle {salle['nom']} accueille au maximum {salle['capacite']} personnes."
         )
 
+    if repeter in (None, "", 0):
+        repeter = 1
+    else:
+        try:
+            repeter = int(repeter)
+        except (TypeError, ValueError):
+            raise ErreurMetier("Le nombre de semaines doit être un entier.") from None
+        if repeter < 1:
+            raise ErreurMetier("Le nombre de semaines doit être au moins 1.")
+
+    dates = [jour + timedelta(days=7 * index) for index in range(repeter)]
+
     debut_normalise = heure_depuis_minutes(debut_minutes)
     fin_normalisee = heure_depuis_minutes(fin_minutes)
-    conflit = conn.execute(
-        """
-        SELECT personne, debut, fin
-        FROM reservations
-        WHERE salle_id = ? AND date = ? AND debut < ? AND fin > ?
-        ORDER BY debut
-        LIMIT 1
-        """,
-        (salle["id"], jour.isoformat(), fin_normalisee, debut_normalise),
-    ).fetchone()
-    if conflit is not None:
-        raise ErreurMetier(
-            f"Créneau indisponible : {conflit['personne']} occupe déjà la salle "
-            f"de {conflit['debut']} à {conflit['fin']}."
-        )
+    for date_occurence in dates:
+        conflit = conn.execute(
+            """
+            SELECT personne, debut, fin
+            FROM reservations
+            WHERE salle_id = ? AND date = ? AND debut < ? AND fin > ?
+            ORDER BY debut
+            LIMIT 1
+            """,
+            (salle["id"], date_occurence.isoformat(), fin_normalisee, debut_normalise),
+        ).fetchone()
+        if conflit is not None:
+            raise ErreurMetier(
+                f"Créneau indisponible le {date_occurence.isoformat()} : "
+                f"{conflit['personne']} occupe déjà la salle "
+                f"de {conflit['debut']} à {conflit['fin']}."
+            )
 
-    conflit_personne = conn.execute(
-        """
-        SELECT salle_id, debut, fin
-        FROM reservations
-        WHERE personne = ? AND date = ? AND debut < ? AND fin > ?
-        ORDER BY debut
-        LIMIT 1
-        """,
-        (personne, jour.isoformat(), fin_normalisee, debut_normalise),
-    ).fetchone()
-    if conflit_personne is not None:
-        raise ErreurMetier(
-            f"{personne} a déjà une réservation le {jour.isoformat()} "
-            f"de {conflit_personne['debut']} à {conflit_personne['fin']}."
-        )
+        conflit_personne = conn.execute(
+            """
+            SELECT salle_id, debut, fin
+            FROM reservations
+            WHERE personne = ? AND date = ? AND debut < ? AND fin > ?
+            ORDER BY debut
+            LIMIT 1
+            """,
+            (personne, date_occurence.isoformat(), fin_normalisee, debut_normalise),
+        ).fetchone()
+        if conflit_personne is not None:
+            raise ErreurMetier(
+                f"{personne} a déjà une réservation le {date_occurence.isoformat()} "
+                f"de {conflit_personne['debut']} à {conflit_personne['fin']}."
+            )
 
-    curseur = conn.execute(
-        """
-        INSERT INTO reservations (salle_id, personne, date, debut, fin, participants)
-        VALUES (?, ?, ?, ?, ?, ?)
-        """,
-        (salle["id"], personne, jour.isoformat(), debut_normalise, fin_normalisee, participants),
-    )
+    premier_id = None
+    for date_occurence in dates:
+        curseur = conn.execute(
+            """
+            INSERT INTO reservations (salle_id, personne, date, debut, fin, participants)
+            VALUES (?, ?, ?, ?, ?, ?)
+            """,
+            (
+                salle["id"],
+                personne,
+                date_occurence.isoformat(),
+                debut_normalise,
+                fin_normalisee,
+                participants,
+            ),
+        )
+        if premier_id is None:
+            premier_id = int(curseur.lastrowid)
     conn.commit()
-    return int(curseur.lastrowid)
+    return premier_id
 
 
 def supprimer_reservation(conn, reservation_id):

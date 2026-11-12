@@ -294,6 +294,17 @@
             {% endfor %}
           </select>
         </label>
+        <label class="checkbox">
+          <input name="repeter" type="checkbox">
+          <span>
+            <strong>Répéter chaque semaine</strong>
+            <small>Le même créneau est réservé sur plusieurs semaines</small>
+          </span>
+        </label>
+        <label class="field">
+          <span>Nombre de semaines</span>
+          <input name="semaines" type="number" min="1" max="52" step="1" value="4">
+        </label>
       </div>
       <p class="form-error" id="reservation-error" role="alert" hidden></p>
       <p class="form-help">Créneaux de 8 h à 20 h, durée de 30 min à 4 h. Finir à 12 h et commencer à 12 h est autorisé.</p>

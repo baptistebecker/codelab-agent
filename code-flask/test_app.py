@@ -150,6 +150,27 @@ def test_refuse_un_chevauchement_pour_la_meme_personne(client):
     assert "déjà une réservation" in reponse.get_json()["erreur"]
 
 
+def test_cree_une_reservation_repeter_chaque_semaine(client):
+    reponse = client.post(
+        "/api/reservations",
+        json={
+            "salle_id": 1,
+            "personne": "Bob",
+            "date": "2026-11-09",
+            "debut": "08:00",
+            "fin": "09:00",
+            "participants": 5,
+            "repeter": 2,
+        },
+    )
+    assert reponse.status_code == 200
+
+    page_semaine_1 = client.get("/?salle=1&semaine=2026-11-09").get_data(as_text=True)
+    page_semaine_2 = client.get("/?salle=1&semaine=2026-11-16").get_data(as_text=True)
+    assert "Bob" in page_semaine_1
+    assert "Bob" in page_semaine_2
+
+
 def test_refuse_une_reservation_au_dela_de_la_capacite(client):
     reponse = client.post(
         "/api/reservations",

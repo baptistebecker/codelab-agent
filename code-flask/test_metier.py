@@ -55,6 +55,44 @@ def test_accepte_deux_creneaux_adjacents_pour_la_meme_personne(connexion):
     assert connexion.execute("SELECT COUNT(*) FROM reservations").fetchone()[0] == 3
 
 
+def test_cree_une_reservation_repeter_chaque_semaine(connexion):
+    premier_id = metier.creer_reservation(
+        connexion, 1, "Bob", "2026-11-09", "08:00", "09:00", 5, repeter=4
+    )
+    reservations = connexion.execute(
+        "SELECT date FROM reservations WHERE personne = 'Bob' ORDER BY date"
+    ).fetchall()
+    assert [reservation["date"] for reservation in reservations] == [
+        "2026-11-09",
+        "2026-11-16",
+        "2026-11-23",
+        "2026-11-30",
+    ]
+    assert premier_id is not None
+
+
+def test_refuse_une_repetition_si_une_occurrence_est_en_conflit(connexion):
+    metier.creer_reservation(connexion, 1, "Chloé", "2026-11-16", "08:00", "09:00", 5)
+    with pytest.raises(metier.ErreurMetier, match="indisponible"):
+        metier.creer_reservation(
+            connexion, 1, "Bob", "2026-11-09", "08:00", "09:00", 5, repeter=2
+        )
+    assert (
+        connexion.execute(
+            "SELECT COUNT(*) FROM reservations WHERE personne = 'Bob'"
+        ).fetchone()[0]
+        == 0
+    )
+
+
+@pytest.mark.parametrize("repeter", ["abc", -1])
+def test_refuse_un_nombre_de_semaines_invalide(connexion, repeter):
+    with pytest.raises(metier.ErreurMetier, match="semaines"):
+        metier.creer_reservation(
+            connexion, 1, "Bob", "2026-11-09", "08:00", "09:00", 5, repeter=repeter
+        )
+
+
 def test_refuse_une_capacite_depassee(connexion):
     with pytest.raises(metier.ErreurMetier, match="maximum 20"):
         metier.creer_reservation(

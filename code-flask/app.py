@@ -348,6 +348,7 @@ def api_creer_reservation():
                 donnees.get("debut"),
                 donnees.get("fin"),
                 donnees.get("participants"),
+                donnees.get("repeter"),
             )
     except metier.ErreurMetier as erreur:
         return _reponse_erreur(erreur)
