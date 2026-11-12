@@ -86,7 +86,7 @@ def semaine_demandee(valeur=None, aujourdhui=None):
 
 def lister_salles(conn):
     return conn.execute(
-        "SELECT id, nom, capacite, projecteur FROM salles ORDER BY nom COLLATE NOCASE, id"
+        "SELECT id, nom, categorie, capacite, projecteur FROM salles ORDER BY nom COLLATE NOCASE, id"
     ).fetchall()
 
 
@@ -96,7 +96,7 @@ def trouver_salle(conn, salle_id):
     except (TypeError, ValueError):
         raise Introuvable("Cette salle n'existe pas.") from None
     salle = conn.execute(
-        "SELECT id, nom, capacite, projecteur FROM salles WHERE id = ?", (salle_id,)
+        "SELECT id, nom, categorie, capacite, projecteur FROM salles WHERE id = ?", (salle_id,)
     ).fetchone()
     if salle is None:
         raise Introuvable("Cette salle n'existe pas.")
@@ -110,24 +110,26 @@ def _capacite(valeur):
     return capacite
 
 
-def creer_salle(conn, nom, capacite, projecteur=0):
+def creer_salle(conn, nom, categorie, capacite, projecteur=0):
     nom = _texte(nom, "Le nom de la salle est obligatoire.")
+    categorie = _texte(categorie, "Le type de salle est obligatoire.")
     capacite = _capacite(capacite)
     curseur = conn.execute(
-        "INSERT INTO salles (nom, capacite, projecteur) VALUES (?, ?, ?)",
-        (nom, capacite, 1 if _booleen(projecteur) else 0),
+        "INSERT INTO salles (nom, categorie, capacite, projecteur) VALUES (?, ?, ?, ?)",
+        (nom, categorie, capacite, 1 if _booleen(projecteur) else 0),
     )
     conn.commit()
     return int(curseur.lastrowid)
 
 
-def modifier_salle(conn, salle_id, nom, capacite, projecteur=0):
+def modifier_salle(conn, salle_id, nom, categorie, capacite, projecteur=0):
     trouver_salle(conn, salle_id)
     nom = _texte(nom, "Le nom de la salle est obligatoire.")
+    categorie = _texte(categorie, "Le type de salle est obligatoire.")
     capacite = _capacite(capacite)
     conn.execute(
-        "UPDATE salles SET nom = ?, capacite = ?, projecteur = ? WHERE id = ?",
-        (nom, capacite, 1 if _booleen(projecteur) else 0, salle_id),
+        "UPDATE salles SET nom = ?, categorie = ?, capacite = ?, projecteur = ? WHERE id = ?",
+        (nom, categorie, capacite, 1 if _booleen(projecteur) else 0, salle_id),
     )
     conn.commit()
 

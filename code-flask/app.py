@@ -232,6 +232,7 @@ def accueil():
         "aujourdhui": aujourdhui.isoformat(),
         "salleId": salle_choisie["id"] if salle_choisie else None,
         "salleNom": salle_choisie["nom"] if salle_choisie else None,
+        "salleType": salle_choisie["categorie"] if salle_choisie else None,
         "capacite": salle_choisie["capacite"] if salle_choisie else None,
         "dateDefaut": defauts["date"],
         "debutDefaut": defauts["debut"],
@@ -266,6 +267,7 @@ def api_creer_salle():
             salle_id = metier.creer_salle(
                 conn,
                 donnees.get("nom"),
+                donnees.get("categorie"),
                 donnees.get("capacite"),
                 donnees.get("projecteur"),
             )
@@ -291,6 +293,7 @@ def api_modifier_salle(salle_id):
                 conn,
                 salle_id,
                 donnees.get("nom"),
+                donnees.get("categorie"),
                 donnees.get("capacite"),
                 donnees.get("projecteur"),
             )

@@ -105,6 +105,7 @@
       salleSurtitre.textContent = salle.nom;
       salleSubmit.textContent = "Enregistrer";
       salleFormulaire.elements.nom.value = salle.nom;
+      salleFormulaire.elements.categorie.value = salle.categorie;
       salleFormulaire.elements.capacite.value = salle.capacite;
       salleFormulaire.elements.projecteur.checked =
         salle.projecteur === "1" || salle.projecteur === 1 || salle.projecteur === true;
@@ -127,6 +128,7 @@
       ouvrirSalle({
         id: bouton.dataset.id,
         nom: bouton.dataset.nom,
+        categorie: bouton.dataset.type,
         capacite: bouton.dataset.capacite,
         projecteur: bouton.dataset.projecteur,
       });
@@ -140,6 +142,7 @@
       const identifiant = salleFormulaire.elements.id.value;
       const donnees = {
         nom: salleFormulaire.elements.nom.value.trim(),
+        categorie: salleFormulaire.elements.categorie.value.trim(),
         capacite: Number(salleFormulaire.elements.capacite.value),
         projecteur: salleFormulaire.elements.projecteur.checked,
         semaine: config.semaine,

@@ -21,7 +21,13 @@ def test_une_salle_inconnue_redirige_vers_la_premiere(client):
 def test_ajoute_une_salle(client):
     reponse = client.post(
         "/api/salles",
-        json={"nom": "S3", "capacite": 30, "projecteur": True, "semaine": "2026-11-09"},
+        json={
+            "nom": "S3",
+            "categorie": "Projet",
+            "capacite": 30,
+            "projecteur": True,
+            "semaine": "2026-11-09",
+        },
     )
     assert reponse.status_code == 200
     donnees = reponse.get_json()
@@ -30,6 +36,7 @@ def test_ajoute_une_salle(client):
     page = client.get(donnees["redirect"]).get_data(as_text=True)
     assert "S3" in page
     assert "30 places" in page
+    assert "Projet" in page
 
 
 def test_modifie_une_salle(client):
@@ -37,6 +44,7 @@ def test_modifie_une_salle(client):
         "/api/salles/2",
         json={
             "nom": "S2 rénovée",
+            "categorie": "Projet",
             "capacite": 16,
             "projecteur": True,
             "semaine": "2026-11-09",

@@ -115,24 +115,39 @@ def test_statistiques_de_la_semaine(connexion):
 
 
 def test_cree_et_modifie_une_salle(connexion):
-    salle_id = metier.creer_salle(connexion, "Amphi", 60, True)
+    salle_id = metier.creer_salle(connexion, "Amphi", "Réu", 60, True)
     salle = metier.trouver_salle(connexion, salle_id)
-    assert (salle["nom"], salle["capacite"], salle["projecteur"]) == ("Amphi", 60, 1)
+    assert (salle["nom"], salle["categorie"], salle["capacite"], salle["projecteur"]) == (
+        "Amphi",
+        "Réu",
+        60,
+        1,
+    )
 
-    metier.modifier_salle(connexion, salle_id, "Amphi B", 45, False)
+    metier.modifier_salle(connexion, salle_id, "Amphi B", "Projet", 45, False)
     salle = metier.trouver_salle(connexion, salle_id)
-    assert (salle["nom"], salle["capacite"], salle["projecteur"]) == ("Amphi B", 45, 0)
+    assert (salle["nom"], salle["categorie"], salle["capacite"], salle["projecteur"]) == (
+        "Amphi B",
+        "Projet",
+        45,
+        0,
+    )
 
 
 @pytest.mark.parametrize("capacite", [0, -3, "abc", None])
 def test_refuse_une_capacite_de_salle_invalide(connexion, capacite):
     with pytest.raises(metier.ErreurMetier):
-        metier.creer_salle(connexion, "Salle", capacite)
+        metier.creer_salle(connexion, "Salle", "Réu", capacite)
 
 
 def test_refuse_un_nom_de_salle_vide(connexion):
     with pytest.raises(metier.ErreurMetier, match="nom"):
-        metier.creer_salle(connexion, "  ", 10)
+        metier.creer_salle(connexion, "  ", "Réu", 10)
+
+
+def test_refuse_un_type_de_salle_vide(connexion):
+    with pytest.raises(metier.ErreurMetier, match="type"):
+        metier.creer_salle(connexion, "Salle", "  ", 10)
 
 
 def test_supprimer_une_salle_supprime_ses_reservations(connexion):
